@@ -308,9 +308,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                console.warn('로그인된 사용자가 없습니다.');
+                return;
+            }
+
             const { error } = await supabase
                 .from('diaries')
-                .insert([{ content: content, ai_response: aiResponse }]);
+                .insert([{ 
+                    content: content, 
+                    ai_response: aiResponse,
+                    user_id: session.user.id
+                }]);
             
             if (error) throw error;
             console.log('일기가 성공적으로 저장되었습니다.');
@@ -338,7 +348,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            // 최신순으로 가져오기
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                timelineLoading.style.display = 'none';
+                timelineList.insertAdjacentHTML('beforeend', '<p class="error-msg">로그인이 필요합니다.</p>');
+                return;
+            }
+
+            // 최신순으로 가져오기 (RLS가 설정되어 있으면 자동으로 자신의 데이터만 가져옴)
             const { data, error } = await supabase
                 .from('diaries')
                 .select('*')
