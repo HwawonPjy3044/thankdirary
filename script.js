@@ -355,10 +355,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // 최신순으로 가져오기 (RLS가 설정되어 있으면 자동으로 자신의 데이터만 가져옴)
+            // 프론트엔드에서도 자신의 일기만 필터링하도록 강제 적용 (.eq)
             const { data, error } = await supabase
                 .from('diaries')
                 .select('*')
+                .eq('user_id', session.user.id)
                 .order('created_at', { ascending: false });
 
             if (error) throw error;
