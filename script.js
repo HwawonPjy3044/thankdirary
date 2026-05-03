@@ -25,6 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const authErrorMessage = document.getElementById('authErrorMessage');
     const logoutBtn = document.getElementById('logoutBtn');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
+    
+    // 메인 UI 요소들
+    const voiceBtn = document.getElementById('voiceBtn');
+    const voiceBtnIcon = voiceBtn.querySelector('.material-symbols-rounded');
+    const voiceBtnLabel = voiceBtn.querySelector('.btn-label');
+    const aiBtn = document.getElementById('aiBtn');
+    const diaryInput = document.getElementById('diaryInput');
+    const responseContent = document.getElementById('responseContent');
+    const responseBox = document.getElementById('responseBox');
 
     let isSignUpMode = false;
 
@@ -144,20 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
                 loginScreen.classList.add('hidden');
                 logoutBtn.style.display = 'block';
+                // 로그인 완료 시 입력창과 답변란 초기화
+                if (diaryInput) diaryInput.value = '';
+                if (responseContent) responseContent.textContent = '';
             } else if (event === 'SIGNED_OUT') {
                 loginScreen.classList.remove('hidden');
                 logoutBtn.style.display = 'none';
             }
         });
     }
-
-    const voiceBtn = document.getElementById('voiceBtn');
-    const voiceBtnIcon = voiceBtn.querySelector('.material-symbols-rounded');
-    const voiceBtnLabel = voiceBtn.querySelector('.btn-label');
-    const aiBtn = document.getElementById('aiBtn');
-    const diaryInput = document.getElementById('diaryInput');
-    const responseContent = document.getElementById('responseContent');
-    const responseBox = document.getElementById('responseBox');
 
     // ── 음성 인식 (Web Speech API) ──────────────────────────────
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
